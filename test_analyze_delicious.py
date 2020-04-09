@@ -16,3 +16,9 @@ class TestLinkInfo:
     def test_is_private(self):
         assert LinkInfo({'href': 'http://www.smartvideos.ru/', 'add_date': '2012', 'private': '1', 'tags': 'education,imported'}).is_private is True
         assert LinkInfo({'href': 'http://www.smartvideos.ru/', 'add_date': '2012', 'private': '0', 'tags': 'education,imported'}).is_private is False
+    
+    def test_href(self):
+        assert LinkInfo({'href': 'http://www.smartvideos.ru/', 'add_date': '2012', 'private': '1', 'tags': 'education,imported'}).href == 'http://www.smartvideos.ru/'
+
+    def test_text(self):
+        assert LinkInfo({'href': 'http://www.smartvideos.ru/', 'add_date': '2012', 'private': '1', 'tags': 'education,imported', "text": "text2"}).text == 'text2'

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Delicious bookmarks</title>
+    </head>
+    <body>
+        Hello!
+        <ol>
+            {% for item in links %}
+                <li><a href="{{ item.href }}">{{ item.text }}</a></li>
+            {% endfor %}
+        </ol>
+    </body>
+</html>

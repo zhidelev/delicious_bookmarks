@@ -3,8 +3,11 @@ import json
 import copy
 from urllib.parse import urlparse
 import argparse
+from jinja2 import Template, FileSystemLoader, Environment
 
 stat = {"dates": {}, "privates": 0, "publics": 0, "tags": {}}
+
+env = Environment(loader=FileSystemLoader("templates"))
 
 class Url:
     def __init__(self, url):
@@ -18,17 +21,25 @@ class LinkInfo:
         self.info = info
         self.url = Url(self.info['href'])
     
+    @property
+    def is_private(self) -> bool:
+        return bool(int(self.info['private']))
+    
+    @property
+    def href(self) -> str:
+        return self.info["href"]
+    
+    @property
+    def text(self) -> str:
+        return self.info['text']
+    
     def __str__(self) -> str:
         if not self.is_private:
             return f"LinkInfo: {self.url.get_domain()}"
         else:
             return "LinkInfo is private."
 
-    @property
-    def is_private(self):
-        return bool(int(self.info['private']))
-
-    def get_tags(self):
+    def get_tags(self) -> list:
         return self.info['tags'].split(",")
 
 
@@ -36,7 +47,7 @@ def get_links(filename):
     with open(filename) as f:
         soup = BeautifulSoup(f.read(), 'html.parser')
         for link in soup.find_all('a'):
-            yield LinkInfo(link.attrs)
+            yield LinkInfo({**link.attrs, **{"text": link.text}})
 
 def process_stats(link_attrs, statistic):
     if link_attrs['href'] in statistic.keys():
@@ -68,15 +79,8 @@ if __name__ == "__main__":
     parser.add_argument("-f", action="store", dest="filename", help="Path to file with bookmarks.")
 
     results = parser.parse_args()
+
+    template = env.get_template('template.html')
     
-    # with open("output.json", "w") as fp:
-    #     fp.write(json.dumps([l for l in get_links(f)]))
-    
-    st = copy.deepcopy(stat)
-    
-    for l in get_links(results.filename):
-        # process_stats(l, st)
-        print(l)
-    
-    # print(st)
-    # print(st['tags'])
+    with open("report.html", "wt") as f:
+        f.write(template.render(links=(l for l in get_links(results.filename))))
