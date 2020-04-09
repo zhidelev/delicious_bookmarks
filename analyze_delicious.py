@@ -4,6 +4,13 @@ import copy
 
 stat = {"dates": {}, "privates": 0, "publics": 0, "tags": {}}
 
+class Link:
+    def __init__(self, url):
+        self.url = url
+    
+    def get_domain(self) -> str:
+        
+
 def get_links():
     with open("delicious.html") as f:
         soup = BeautifulSoup(f.read(), 'html.parser')
