@@ -85,7 +85,7 @@ class TestLinkInfo:
                     "add_date": "2012",
                     "private": "1",
                     "tags": "education,imported",
-                    "text": None,
+                    "text": "None",
                 }
             ).text
             == "egghead.io"
