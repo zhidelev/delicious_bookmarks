@@ -1,9 +1,7 @@
 from bs4 import BeautifulSoup
-import json
-import copy
 from urllib.parse import urlparse
 import argparse
-from jinja2 import Template, FileSystemLoader, Environment
+from jinja2 import FileSystemLoader, Environment
 
 stat = {"dates": {}, "privates": 0, "publics": 0, "tags": {}}
 
@@ -47,11 +45,17 @@ class LinkInfo:
         return self.info["tags"].split(",")
 
 
-def get_links(filename):
+def get_links(filename, private):
     with open(filename) as f:
         soup = BeautifulSoup(f.read(), "html.parser")
         for link in soup.find_all("a"):
-            yield LinkInfo({**link.attrs, **{"text": link.text}})
+            temp = LinkInfo({**link.attrs, **{"text": link.text}})
+            if private:
+                if temp.is_private:
+                    yield temp
+            else:
+                if not temp.is_private:
+                    yield temp
 
 
 def process_stats(link_attrs, statistic):
@@ -84,10 +88,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze your Delicious bookmarks.")
     parser.add_argument("-f", action="store", dest="filename", help="Path to file with bookmarks.")
     parser.add_argument("-o", action="store", dest="output_file", help="Path to output file", default="report.html")
+    parser.add_argument(
+        "--private", action="store_true", dest="process_private", default=False, help="Process private links"
+    )
 
     results = parser.parse_args()
 
     template = env.get_template("template.html")
 
     with open(results.output_file, "wt") as f:
-        f.write(template.render(links=(l for l in get_links(results.filename))))
+        f.write(template.render(links=(l for l in get_links(results.filename, results.process_private))))
