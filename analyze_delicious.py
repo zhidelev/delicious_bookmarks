@@ -2,8 +2,9 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import argparse
 from jinja2 import FileSystemLoader, Environment
+from collections import defaultdict
 
-stat = {"dates": {}, "privates": 0, "publics": 0, "tags": {}}
+# stat = {"dates": {}, "privates": 0, "publics": 0, "tags": {}}
 
 env = Environment(loader=FileSystemLoader("templates"))
 
@@ -44,6 +45,21 @@ class LinkInfo:
     def get_tags(self) -> list:
         return self.info["tags"].split(",")
 
+class Stats:
+    def __init__(self):
+        self.privacy = defaultdict(int)
+        self.tags = defaultdict(int)
+
+    def update_stats(self, link) -> None:
+        if link.is_private:
+            self.privacy['private'] += 1
+        elif not link.is_private:
+            self.privacy['public'] += 1
+        
+        for tag in link.get_tags():
+            self.tags[tag] += 1
+
+
 
 def get_links(filename, private):
     with open(filename) as f:
@@ -58,7 +74,7 @@ def get_links(filename, private):
                     yield temp
 
 
-def process_stats(link_attrs, statistic):
+def process_stats(link, stat):
     if link_attrs["href"] in statistic.keys():
         statistic[link_attrs["href"]] += 1
     else:

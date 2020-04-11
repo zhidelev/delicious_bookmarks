@@ -1,4 +1,4 @@
-from analyze_delicious import Url, LinkInfo
+from analyze_delicious import Url, LinkInfo, Stats
 
 
 class TestLink:
@@ -90,4 +90,69 @@ class TestLinkInfo:
             ).text
             == "egghead.io"
         )
+
+
+class TestStats:
+    def test_stats_privacy(self):
+        s = Stats()
+        assert s.privacy["private"] == 0
+        assert s.privacy["public"] == 0
+        s.update_stats(
+            LinkInfo(
+                {
+                    "href": "https://egghead.io/courses/getting-started-with-redux",
+                    "add_date": "2012",
+                    "private": "1",
+                    "tags": "education,imported",
+                    "text": "None",
+                }
+            )
+        )
+        assert s.privacy["private"] == 1
+        s.update_stats(
+            LinkInfo(
+                {
+                    "href": "https://egghead.io/courses/getting-started-with-redux",
+                    "add_date": "2012",
+                    "private": "0",
+                    "tags": "education,imported",
+                    "text": "None",
+                }
+            )
+        )
+        assert s.privacy["private"] == 1
+        assert s.privacy["public"] == 1
+
+    def test_stats_tags(self):
+        s = Stats()
+        assert len(s.tags.keys()) == 0
+        s.update_stats(
+            LinkInfo(
+                {
+                    "href": "https://egghead.io/courses/getting-started-with-redux",
+                    "add_date": "2012",
+                    "private": "0",
+                    "tags": "education,imported",
+                    "text": "None",
+                }
+            )
+        )
+        assert len(s.tags.keys()) == 2
+        assert s.tags["imported"] == 1
+        assert s.tags["education"] == 1
+
+        s.update_stats(
+            LinkInfo(
+                {
+                    "href": "https://egghead.io/courses/getting-started-with-redux",
+                    "add_date": "2012",
+                    "private": "0",
+                    "tags": "",
+                    "text": "None",
+                }
+            )
+        )
+
+        assert s.tags["imported"] == 1
+        assert s.tags["education"] == 1
 
