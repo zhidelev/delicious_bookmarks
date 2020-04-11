@@ -74,28 +74,28 @@ def get_links(filename, private):
                     yield temp
 
 
-def process_stats(link, stat):
-    if link_attrs["href"] in statistic.keys():
-        statistic[link_attrs["href"]] += 1
-    else:
-        statistic[link_attrs["href"]] = 1
+# def process_stats(link, stat):
+#     if link_attrs["href"] in statistic.keys():
+#         statistic[link_attrs["href"]] += 1
+#     else:
+#         statistic[link_attrs["href"]] = 1
 
-    if link_attrs["add_date"] not in statistic["dates"].keys():
-        statistic["dates"][link_attrs["add_date"]] = 1
-    else:
-        statistic["dates"][link_attrs["add_date"]] += 1
+#     if link_attrs["add_date"] not in statistic["dates"].keys():
+#         statistic["dates"][link_attrs["add_date"]] = 1
+#     else:
+#         statistic["dates"][link_attrs["add_date"]] += 1
 
-    if link_attrs["private"]:
-        statistic["privates"] += 1
-    else:
-        statistic["publics"] += 1
+#     if link_attrs["private"]:
+#         statistic["privates"] += 1
+#     else:
+#         statistic["publics"] += 1
 
-    tags = link_attrs["tags"].split(",")
-    for tag in tags:
-        if tag in statistic["tags"].keys():
-            statistic["tags"][tag] += 1
-        else:
-            statistic["tags"][tag] = 1
+#     tags = link_attrs["tags"].split(",")
+#     for tag in tags:
+#         if tag in statistic["tags"].keys():
+#             statistic["tags"][tag] += 1
+#         else:
+#             statistic["tags"][tag] = 1
 
     # yield link_attrs
 
