@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 import argparse
 from jinja2 import FileSystemLoader, Environment
 from collections import defaultdict
+from datetime import datetime
 
 # stat = {"dates": {}, "privates": 0, "publics": 0, "tags": {}}
 
@@ -35,6 +36,13 @@ class LinkInfo:
         if self.info["text"] in ["", "None"]:
             return self.url.get_domain()
         return self.info["text"]
+    
+    @property
+    def date(self) -> str:
+        if len(self.info['add_date']) == 4:
+            return self.info['add_date']
+        t_date = datetime.fromtimestamp(int(self.info['add_date']))
+        return "{:%Y-%m-%d}".format(t_date)
 
     def __str__(self) -> str:
         if not self.is_private:
