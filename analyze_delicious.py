@@ -71,6 +71,7 @@ class Stats:
     def __init__(self):
         self.privacy = defaultdict(int)
         self.tags = defaultdict(int)
+        self.domains = defaultdict(int)
 
     def update_stats(self, link) -> None:
         if link.is_private:
@@ -80,6 +81,8 @@ class Stats:
         
         for tag in link.get_tags():
             self.tags[tag] += 1
+        
+        self.domains[link.url.get_domain()] += 1
 
 
 
@@ -97,32 +100,6 @@ def get_links(filename, private):
                     yield temp
 
 
-# def process_stats(link, stat):
-#     if link_attrs["href"] in statistic.keys():
-#         statistic[link_attrs["href"]] += 1
-#     else:
-#         statistic[link_attrs["href"]] = 1
-
-#     if link_attrs["add_date"] not in statistic["dates"].keys():
-#         statistic["dates"][link_attrs["add_date"]] = 1
-#     else:
-#         statistic["dates"][link_attrs["add_date"]] += 1
-
-#     if link_attrs["private"]:
-#         statistic["privates"] += 1
-#     else:
-#         statistic["publics"] += 1
-
-#     tags = link_attrs["tags"].split(",")
-#     for tag in tags:
-#         if tag in statistic["tags"].keys():
-#             statistic["tags"][tag] += 1
-#         else:
-#             statistic["tags"][tag] = 1
-
-    # yield link_attrs
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze your Delicious bookmarks.")
     parser.add_argument("-f", action="store", dest="filename", help="Path to file with bookmarks.")
@@ -133,7 +110,7 @@ if __name__ == "__main__":
 
     results = parser.parse_args()
 
-    template = env.get_template("template.html")
+    report = env.get_template("template.html")
 
     with open(results.output_file, "wt") as f:
         f.write(template.render(links=(l for l in get_links(results.filename, results.process_private))))
@@ -152,3 +129,13 @@ if __name__ == "__main__":
 
             for link in get_links(results.filename, results.process_private):
                 cursor.execute("INSERT INTO links VALUES (?, ?, ?, ?, ?)", (None, str(link.url), int(link.is_private), link.timestamp, 0))
+        f.write(report.render(links=(l for l in get_links(results.filename, results.process_private))))
+    
+    s = Stats()
+    for link in get_links(results.filename, results.process_private):
+        s.update_stats(LinkInfo(link))
+    
+    print(s)
+    statistics = env.get_template('statistics.html')
+    with open('statistics.html', "wt") as f:
+        f.write(statistics.render(statistics=s))
