@@ -4,8 +4,14 @@ import argparse
 from jinja2 import FileSystemLoader, Environment
 from collections import defaultdict
 from datetime import datetime
+<<<<<<< HEAD
 import os
 import sqlite3
+=======
+from bokeh.plotting import figure, output_file, show
+from bokeh.embed import file_html
+from bokeh.resources import CDN
+>>>>>>> wip: statistics started
 
 
 env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
@@ -133,7 +139,7 @@ if __name__ == "__main__":
     
     s = Stats()
     for link in get_links(results.filename, results.process_private):
-        s.update_stats(LinkInfo(link))
+        s.update_stats(link)
     
     print(s)
     statistics = env.get_template('statistics.html')
