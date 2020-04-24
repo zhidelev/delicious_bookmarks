@@ -51,6 +51,13 @@ class LinkInfo:
             return self.info['add_date']
         t_date = datetime.fromtimestamp(int(self.info['add_date']))
         return "{:%Y-%m-%d}".format(t_date)
+    
+    @property
+    def timestamp(self) -> int:
+        if len(self.info['add_date']) == 4:
+            return 0
+        else:
+            return int(self.info['add_date'])
 
     def __str__(self) -> str:
         if not self.is_private:
@@ -132,19 +139,17 @@ if __name__ == "__main__":
     with open(results.output_file, "wt") as f:
         f.write(template.render(links=(l for l in get_links(results.filename, results.process_private))))
 
-
-    # Working with DB
     db_filename = "links_storage.db"
+    schema_filename = "links_schema.sql"
+
     db_is_new = not os.path.exists(db_filename)
 
     with sqlite3.connect(db_filename) as conn:
         if db_is_new:
-            with open('links_schema.sql', 'rt') as fd:
-                conn.executescript(fd.read())
+            with open(schema_filename) as f:
+                conn.executescript(f.read())
         
-        cursor = conn.cursor()
+            cursor = conn.cursor()
 
-        for link in get_links(results.filename, results.process_private):
-            if link.is_private:
-                print(link.url, link.is_private)
-            cursor.execute(f"INSERT INTO links VALUES (?, ?, ?, ?, ?)", (None, str(link.url), int(link.is_private), 0, 0))
+            for link in get_links(results.filename, results.process_private):
+                cursor.execute("INSERT INTO links VALUES (?, ?, ?, ?, ?)", (None, str(link.url), int(link.is_private), link.timestamp, 0))
