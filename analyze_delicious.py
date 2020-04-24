@@ -4,10 +4,12 @@ import argparse
 from jinja2 import FileSystemLoader, Environment
 from collections import defaultdict
 from datetime import datetime
+import os
+import sqlite3
 
 # stat = {"dates": {}, "privates": 0, "publics": 0, "tags": {}}
 
-env = Environment(loader=FileSystemLoader("templates"))
+env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
 
 class Url:
@@ -16,6 +18,9 @@ class Url:
 
     def get_domain(self) -> str:
         return urlparse(self.url).netloc
+    
+    def __str__(self):
+        return self.url
 
 
 class LinkInfo:
@@ -25,7 +30,10 @@ class LinkInfo:
 
     @property
     def is_private(self) -> bool:
-        return bool(int(self.info["private"]))
+        if self.info["private"] == "1":
+            return True
+        else:
+            return False
 
     @property
     def href(self) -> str:
@@ -73,6 +81,7 @@ def get_links(filename, private):
     with open(filename) as f:
         soup = BeautifulSoup(f.read(), "html.parser")
         for link in soup.find_all("a"):
+            print(link.attrs)
             temp = LinkInfo({**link.attrs, **{"text": link.text}})
             if private:
                 if temp.is_private:
@@ -122,3 +131,20 @@ if __name__ == "__main__":
 
     with open(results.output_file, "wt") as f:
         f.write(template.render(links=(l for l in get_links(results.filename, results.process_private))))
+
+
+    # Working with DB
+    db_filename = "links_storage.db"
+    db_is_new = not os.path.exists(db_filename)
+
+    with sqlite3.connect(db_filename) as conn:
+        if db_is_new:
+            with open('links_schema.sql', 'rt') as fd:
+                conn.executescript(fd.read())
+        
+        cursor = conn.cursor()
+
+        for link in get_links(results.filename, results.process_private):
+            if link.is_private:
+                print(link.url, link.is_private)
+            cursor.execute(f"INSERT INTO links VALUES (?, ?, ?, ?, ?)", (None, str(link.url), int(link.is_private), 0, 0))
