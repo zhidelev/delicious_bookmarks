@@ -2,7 +2,7 @@ from analyze_delicious import Url, LinkInfo, Stats
 import copy
 
 temp_url = "https://plumbr.eu/handbook/garbage-collection-algorithms-implementations/concurrent-mark-and-sweep"
-temp_link = {"href": "http://www.smartvideos.ru/", "add_date": "2012", "private": "1", "tags": "education,imported"}
+temp_link = {"href": "https://www.smartvideos.ru/", "add_date": "2012", "private": "1", "tags": "education,imported"}
 
 temp_link_public = copy.deepcopy(temp_link)
 temp_link_public["private"] = "0"
@@ -31,7 +31,7 @@ class TestLinkInfo:
         assert LinkInfo(temp_link_public).is_private is False
 
     def test_href(self):
-        assert LinkInfo(temp_link).href == "http://www.smartvideos.ru/"
+        assert LinkInfo(temp_link).href == "https://www.smartvideos.ru/"
 
     def test_text(self):
         assert LinkInfo({**temp_link, **{"text": "text2"}}).text == "text2"
