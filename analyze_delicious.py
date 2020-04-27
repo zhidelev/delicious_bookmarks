@@ -82,7 +82,7 @@ class Stats:
     def update_stats(self, link) -> None:
         if link.is_private:
             self.privacy['private'] += 1
-        elif not link.is_private:
+        else:
             self.privacy['public'] += 1
         
         for tag in link.get_tags():
