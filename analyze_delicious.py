@@ -7,7 +7,6 @@ from datetime import datetime
 import os
 import sqlite3
 
-# stat = {"dates": {}, "privates": 0, "publics": 0, "tags": {}}
 
 env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
