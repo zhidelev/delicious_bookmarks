@@ -4,14 +4,11 @@ import argparse
 from jinja2 import FileSystemLoader, Environment
 from collections import defaultdict
 from datetime import datetime
-<<<<<<< HEAD
 import os
 import sqlite3
-=======
 from bokeh.plotting import figure, output_file, show
 from bokeh.embed import file_html
 from bokeh.resources import CDN
->>>>>>> wip: statistics started
 
 
 env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
@@ -96,7 +93,6 @@ def get_links(filename, private):
     with open(filename) as f:
         soup = BeautifulSoup(f.read(), "html.parser")
         for link in soup.find_all("a"):
-            print(link.attrs)
             temp = LinkInfo({**link.attrs, **{"text": link.text}})
             if not temp.is_private:
                 yield temp
@@ -118,7 +114,7 @@ if __name__ == "__main__":
     report = env.get_template("template.html")
 
     with open(results.output_file, "wt") as f:
-        f.write(template.render(links=(l for l in get_links(results.filename, results.process_private))))
+        f.write(report.render(links=(l for l in get_links(results.filename, results.process_private))))
 
     db_filename = "links_storage.db"
     schema_filename = "links_schema.sql"
@@ -134,13 +130,11 @@ if __name__ == "__main__":
 
             for link in get_links(results.filename, results.process_private):
                 cursor.execute("INSERT INTO links VALUES (?, ?, ?, ?, ?)", (None, str(link.url), int(link.is_private), link.timestamp, 0))
-        f.write(report.render(links=(l for l in get_links(results.filename, results.process_private))))
     
     s = Stats()
     for link in get_links(results.filename, results.process_private):
         s.update_stats(link)
     
-    print(s)
     statistics = env.get_template('statistics.html')
     with open('statistics.html', "wt") as f:
         f.write(statistics.render(statistics=s))
