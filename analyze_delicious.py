@@ -82,7 +82,7 @@ class Stats:
     def update_stats(self, link) -> None:
         if link.is_private:
             self.privacy['private'] += 1
-        else:
+        if not link.is_private:
             self.privacy['public'] += 1
         
         for tag in link.get_tags():
@@ -98,11 +98,10 @@ def get_links(filename, private):
         for link in soup.find_all("a"):
             print(link.attrs)
             temp = LinkInfo({**link.attrs, **{"text": link.text}})
+            if not temp.is_private:
+                yield temp
             if private:
                 if temp.is_private:
-                    yield temp
-            else:
-                if not temp.is_private:
                     yield temp
 
 
