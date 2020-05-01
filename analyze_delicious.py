@@ -12,20 +12,20 @@ env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
 
 class Url:
-    def __init__(self, url):
-        self.url = url
+    def __init__(self, addr):
+        self._uri = addr
 
     def get_domain(self) -> str:
-        return urlparse(self.url).netloc
+        return urlparse(self._uri).netloc
     
     def __str__(self):
-        return self.url
+        return self._uri
 
 
 class LinkInfo:
     def __init__(self, info):
         self.info = info
-        self.url = Url(self.info["href"])
+        self._uri = Url(self.info["href"])
 
     @property
     def is_private(self) -> bool:
@@ -41,7 +41,7 @@ class LinkInfo:
     @property
     def text(self) -> str:
         if self.info["text"] in ["", "None"]:
-            return self.url.get_domain()
+            return self._uri.get_domain()
         return self.info["text"]
     
     @property
@@ -60,7 +60,7 @@ class LinkInfo:
 
     def __str__(self) -> str:
         if not self.is_private:
-            return f"LinkInfo: {self.url.get_domain()}"
+            return f"LinkInfo: {self._uri.get_domain()}"
         else:
             return "LinkInfo is private."
 

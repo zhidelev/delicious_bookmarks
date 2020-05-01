@@ -16,7 +16,7 @@ temp_link_empty_tags["tags"] = ""
 
 class TestLink:
     def test_url_creation(self):
-        assert Url(temp_url).url == temp_url
+        assert Url(temp_url)._uri == temp_url
 
     def test_get_domain_for_url(self):
         assert Url(temp_url).get_domain() == "plumbr.eu"
