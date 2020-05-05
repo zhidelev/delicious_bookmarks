@@ -49,6 +49,17 @@ jobs:
     - name: Coverage
       run: |
         coverage xml -o coverage.xml
+    - name: Upload coverage results
+      uses: actions/upload-artifact@v1
+      with:
+        name: coverage.xml
+  
+  sonar-qube:
+    steps:
+      - name: Download coverage results
+        uses: actions/download-artifact@v1
+        with:
+          name: coverage.xml
       - uses: actions/checkout@master
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
