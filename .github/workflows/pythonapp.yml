@@ -46,5 +46,4 @@ jobs:
       run: |
         pip install pytest
         pytest -q -vv --color="yes"
-        coverage run pytest
         coverage xml -o coverage.xml --omit venv
