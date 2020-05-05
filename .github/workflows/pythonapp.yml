@@ -45,7 +45,4 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        pytest -q -vv --color="yes"
-    - name: Coverage
-      run:
-        coverage xml -o coverage.xml
+        pytest -q -vv --color="yes" --cov=.
