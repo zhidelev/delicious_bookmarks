@@ -48,4 +48,4 @@ jobs:
         pytest -q -vv --color="yes" --cov=.
     - name: Coverage
       run: |
-        coverage xml -o coverage.xml
+        coverage xml -o coverage-reports/coverage-all.xml
