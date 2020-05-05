@@ -52,7 +52,8 @@ jobs:
     - name: Upload coverage results
       uses: actions/upload-artifact@v1
       with:
-        name: coverage.xml
+        name: coverage-results
+        path: coverage.xml
   
   sonar-qube:
     
@@ -62,7 +63,7 @@ jobs:
       - name: Download coverage results
         uses: actions/download-artifact@v1
         with:
-          name: coverage.xml
+          name: coverage-results
       - uses: actions/checkout@master
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
