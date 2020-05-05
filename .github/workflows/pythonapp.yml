@@ -48,12 +48,12 @@ jobs:
         pytest -q -vv --color="yes" --cov=.
     - name: Coverage
       run: |
-        coverage xml -o coverage.xml
+        coverage xml -o coverage-all.xml
     - name: Upload coverage results
       uses: actions/upload-artifact@v1
       with:
         name: coverage-results
-        path: coverage.xml
+        path: coverage-all.xml
   
   sonar-qube:
     
