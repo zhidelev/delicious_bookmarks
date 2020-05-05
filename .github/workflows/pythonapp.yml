@@ -55,6 +55,9 @@ jobs:
         name: coverage.xml
   
   sonar-qube:
+    
+    runs-on: ubuntu-latest
+    
     steps:
       - name: Download coverage results
         uses: actions/download-artifact@v1
