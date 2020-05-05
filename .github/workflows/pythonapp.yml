@@ -48,7 +48,7 @@ jobs:
         pytest -q -vv --color="yes" --cov=.
     - name: Coverage
       run: |
-        coverage xml -o coverage-reports/coverage-all.xml
+        coverage xml -o coverage.xml
     - uses: actions/checkout@master
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master
