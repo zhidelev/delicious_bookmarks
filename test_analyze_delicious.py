@@ -1,5 +1,7 @@
-from analyze_delicious import Url, LinkInfo, Stats
+from analyze_delicious import Url, LinkInfo, Stats, get_links
 import copy
+from os.path import join
+import pytest
 
 temp_url = "https://plumbr.eu/handbook/garbage-collection-algorithms-implementations/concurrent-mark-and-sweep"
 temp_link = {"href": "https://www.smartvideos.ru/", "add_date": "2012", "private": "1", "tags": "education,imported"}
@@ -13,6 +15,8 @@ temp_link_long_date["add_date"] = "1487678923"
 temp_link_empty_tags = copy.deepcopy(temp_link)
 temp_link_empty_tags["tags"] = ""
 
+delicious_links = join("datasets", "delicious_links_private.html")
+
 
 class TestLink:
     def test_url_creation(self):
@@ -20,6 +24,9 @@ class TestLink:
 
     def test_get_domain_for_url(self):
         assert Url(temp_url).get_domain() == "plumbr.eu"
+
+    def test_print_url(self):
+        assert Url(temp_url).__str__() == temp_url
 
 
 class TestLinkInfo:
@@ -43,6 +50,18 @@ class TestLinkInfo:
 
     def test_link_date_long(self):
         assert LinkInfo(temp_link_long_date).date == "2017-02-21"
+
+    def test_link_timestamp_short(self):
+        assert LinkInfo(temp_link).timestamp == 0
+
+    def test_link_timestamp_long(self):
+        assert LinkInfo(temp_link_long_date).timestamp == 1487678923
+
+    def test_link_str_public(self):
+        assert LinkInfo(temp_link_public).__str__() == "LinkInfo: www.smartvideos.ru"
+
+    def test_link_str_private(self):
+        assert LinkInfo(temp_link).__str__() == "LinkInfo is private."
 
 
 class TestStats:
@@ -68,3 +87,19 @@ class TestStats:
 
         assert s.tags["imported"] == 1
         assert s.tags["education"] == 1
+
+
+class TestGetLInks:
+    def test_private(self):
+        f = get_links(delicious_links, private=True)
+        assert not next(f).is_private is True
+        assert next(f).is_private
+        assert next(f).is_private
+        with pytest.raises(StopIteration):
+            next(f)
+
+    def test_public(self):
+        f = get_links(delicious_links)
+        assert not next(f).is_private is True
+        with pytest.raises(StopIteration):
+            next(f)
