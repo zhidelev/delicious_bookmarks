@@ -60,15 +60,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - uses: actions/checkout@master
       - name: Download coverage results
         uses: actions/download-artifact@v1
         with:
           name: coverage-results
-      - uses: actions/checkout@master
       - name: SonarCloud Scan
-        uses: actions/download-artifact@v1
-        with:
-          name: coverage-results
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
