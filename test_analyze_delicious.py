@@ -21,6 +21,9 @@ class TestLink:
     def test_get_domain_for_url(self):
         assert Url(temp_url).get_domain() == "plumbr.eu"
 
+    def test_print_url(self):
+        assert Url(temp_url).__str__() == temp_url
+
 
 class TestLinkInfo:
     def test_link_info_get_tags(self):
@@ -43,6 +46,18 @@ class TestLinkInfo:
 
     def test_link_date_long(self):
         assert LinkInfo(temp_link_long_date).date == "2017-02-21"
+
+    def test_link_timestamp_short(self):
+        assert LinkInfo(temp_link).timestamp == 0
+
+    def test_link_timestamp_long(self):
+        assert LinkInfo(temp_link_long_date).timestamp == 1487678923
+
+    def test_link_str_public(self):
+        assert LinkInfo(temp_link_public).__str__() == "LinkInfo: www.smartvideos.ru"
+
+    def test_link_str_private(self):
+        assert LinkInfo(temp_link).__str__() == "LinkInfo is private."
 
 
 class TestStats:

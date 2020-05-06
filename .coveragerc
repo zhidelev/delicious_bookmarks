@@ -1,5 +1,9 @@
 [run]
 branch = True
+omit = /venv/*
+
+[report]
+omit = /venv/*
 
 [html]
 directory=coverage-xml
