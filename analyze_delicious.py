@@ -6,6 +6,7 @@ from collections import defaultdict
 from datetime import datetime
 import os
 import sqlite3
+import pathlib
 
 
 env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
@@ -17,7 +18,7 @@ class Url:
 
     def get_domain(self) -> str:
         return urlparse(self._uri).netloc
-    
+
     def __str__(self):
         return self._uri
 
@@ -43,20 +44,20 @@ class LinkInfo:
         if self.info["text"] in ["", "None"]:
             return self._uri.get_domain()
         return self.info["text"]
-    
+
     @property
     def date(self) -> str:
-        if len(self.info['add_date']) == 4:
-            return self.info['add_date']
-        t_date = datetime.fromtimestamp(int(self.info['add_date']))
+        if len(self.info["add_date"]) == 4:
+            return self.info["add_date"]
+        t_date = datetime.fromtimestamp(int(self.info["add_date"]))
         return "{:%Y-%m-%d}".format(t_date)
-    
+
     @property
     def timestamp(self) -> int:
-        if len(self.info['add_date']) == 4:
+        if len(self.info["add_date"]) == 4:
             return 0
         else:
-            return int(self.info['add_date'])
+            return int(self.info["add_date"])
 
     def __str__(self) -> str:
         if not self.is_private:
@@ -67,6 +68,10 @@ class LinkInfo:
     def get_tags(self) -> list:
         return self.info["tags"].split(",")
 
+    def get_domain(self):
+        return self._uri.get_domain()
+
+
 class Stats:
     def __init__(self):
         self.privacy = defaultdict(int)
@@ -74,13 +79,12 @@ class Stats:
 
     def update_stats(self, link) -> None:
         if link.is_private:
-            self.privacy['private'] += 1
+            self.privacy["private"] += 1
         if not link.is_private:
-            self.privacy['public'] += 1
-        
+            self.privacy["public"] += 1
+
         for tag in link.get_tags():
             self.tags[tag] += 1
-
 
 
 def get_links(filename, private=False):
@@ -95,7 +99,6 @@ def get_links(filename, private=False):
                     yield temp
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze your Delicious bookmarks.")
     parser.add_argument("-f", action="store", dest="filename", help="Path to file with bookmarks.")
@@ -108,20 +111,35 @@ if __name__ == "__main__":
 
     template = env.get_template("template.html")
 
-    with open(results.output_file, "wt") as f:
-        f.write(template.render(links=(l for l in get_links(results.filename, results.process_private))))
+    try:
+        input_file = pathlib.Path(results.filename)
 
-    db_filename = "links_storage.db"
-    schema_filename = "links_schema.sql"
+        with open(results.output_file, "wt") as f:
+            f.write(template.render(links=(l for l in get_links(input_file, results.process_private))))
 
-    db_is_new = not os.path.exists(db_filename)
+    except TypeError as e:
+        print(f"No file is provided. Exception message: {e}")
+    except FileNotFoundError as e:
+        print(f"No such file. Exception message: {e}")
+    except PermissionError as e:
+        print(f"{e}")
+    finally:
+        exit()
 
-    with sqlite3.connect(db_filename) as conn:
-        if db_is_new:
-            with open(schema_filename) as f:
-                conn.executescript(f.read())
-        
-            cursor = conn.cursor()
+    # db_filename = "links_storage.db"
+    # schema_filename = "links_schema.sql"
 
-            for link in get_links(results.filename, results.process_private):
-                cursor.execute("INSERT INTO links VALUES (?, ?, ?, ?, ?)", (None, str(link.url), int(link.is_private), link.timestamp, 0))
+    # db_is_new = not os.path.exists(db_filename)
+
+    # with sqlite3.connect(db_filename) as conn:
+    #     if db_is_new:
+    #         with open(schema_filename) as f:
+    #             conn.executescript(f.read())
+
+    #         cursor = conn.cursor()
+
+    #         for link in get_links(results.filename, results.process_private):
+    #             cursor.execute(
+    #                 "INSERT INTO links VALUES (?, ?, ?, ?, ?)",
+    #                 (None, str(link.url), int(link.is_private), link.timestamp, 0),
+    #             )
