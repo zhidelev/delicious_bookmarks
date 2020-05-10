@@ -63,6 +63,9 @@ class TestLinkInfo:
     def test_link_str_private(self):
         assert LinkInfo(temp_link).__str__() == "LinkInfo is private."
 
+    def test_link_get_domaint(self):
+        assert LinkInfo(temp_link).get_domain() == "www.smartvideos.ru"
+
 
 class TestStats:
     def test_stats_privacy(self):
