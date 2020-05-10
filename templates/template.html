@@ -35,7 +35,7 @@
                     <h5 class="mb-1">{{ item.text }}</h5>
                     <small>{{ item.date }}</small>
                 </div>
-                <p class="mb-1">{{ item.url.get_domain() }}</p>
+                <p class="mb-1">{{ item.get_domain() }}</p>
                 {% for tag in item.get_tags() %}
                 <span class="badge badge-primary">{{ tag }}</span>
                 {% endfor %}
