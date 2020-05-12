@@ -7,8 +7,12 @@ from datetime import datetime
 import os
 import sqlite3
 import pathlib
+import logging
+import logging.config
 
 
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger("root")
 env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
 
@@ -106,9 +110,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--private", action="store_true", dest="process_private", default=False, help="Process private links"
     )
-
     results = parser.parse_args()
-
+    logger.info("Starting with %s" % results)
     template = env.get_template("template.html")
 
     try:
@@ -118,11 +121,11 @@ if __name__ == "__main__":
             f.write(template.render(links=(l for l in get_links(input_file, results.process_private))))
 
     except TypeError as e:
-        print(f"No file is provided. Exception message: {e}")
+        logger.exception("No file is provided", exc_info=True)
     except FileNotFoundError as e:
-        print(f"No such file. Exception message: {e}")
+        logger.exception("No such file", exc_info=True)
     except PermissionError as e:
-        print(f"{e}")
+        logger.exception("Permission problem", exc_info=True)
     finally:
         exit()
 
