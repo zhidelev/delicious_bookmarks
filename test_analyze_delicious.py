@@ -1,7 +1,9 @@
-from analyze_delicious import Url, LinkInfo, Stats, get_links
 import copy
 from os.path import join
+
 import pytest
+
+from analyze_delicious import LinkInfo, Stats, Url, get_links
 
 temp_url = "https://plumbr.eu/handbook/garbage-collection-algorithms-implementations/concurrent-mark-and-sweep"
 temp_link = {"href": "https://www.smartvideos.ru/", "add_date": "2012", "private": "1", "tags": "education,imported"}

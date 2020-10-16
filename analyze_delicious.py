@@ -1,13 +1,13 @@
-from bs4 import BeautifulSoup
-from urllib.parse import urlparse
 import argparse
-from jinja2 import FileSystemLoader, Environment
-from collections import defaultdict
-from datetime import datetime
-import pathlib
 import logging
 import logging.config
+import pathlib
+from collections import defaultdict
+from datetime import datetime
+from urllib.parse import urlparse
 
+from bs4 import BeautifulSoup
+from jinja2 import Environment, FileSystemLoader
 
 logging.config.fileConfig("logging.conf")
 logger = logging.getLogger("root")
