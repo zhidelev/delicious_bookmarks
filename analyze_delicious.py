@@ -4,8 +4,6 @@ import argparse
 from jinja2 import FileSystemLoader, Environment
 from collections import defaultdict
 from datetime import datetime
-import os
-import sqlite3
 import pathlib
 import logging
 import logging.config
@@ -118,13 +116,13 @@ if __name__ == "__main__":
         input_file = pathlib.Path(results.filename)
 
         with open(results.output_file, "wt") as f:
-            f.write(template.render(links=(l for l in get_links(input_file, results.process_private))))
+            f.write(template.render(links=(link for link in get_links(input_file, results.process_private))))
 
-    except TypeError as e:
+    except TypeError:
         logger.exception("No file is provided", exc_info=True)
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         logger.exception("No such file", exc_info=True)
-    except PermissionError as e:
+    except PermissionError:
         logger.exception("Permission problem", exc_info=True)
     finally:
         exit()

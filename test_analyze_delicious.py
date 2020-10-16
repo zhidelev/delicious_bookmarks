@@ -42,8 +42,8 @@ class TestLinkInfo:
 
     def test_text(self):
         assert LinkInfo({**temp_link, **{"text": "text2"}}).text == "text2"
-        assert LinkInfo({**temp_link, **{"text": ""},}).text == "www.smartvideos.ru"
-        assert LinkInfo({**temp_link, **{"text": "None"},}).text == "www.smartvideos.ru"
+        assert LinkInfo({**temp_link, **{"text": ""}, }).text == "www.smartvideos.ru"
+        assert LinkInfo({**temp_link, **{"text": "None"}, }).text == "www.smartvideos.ru"
 
     def test_link_date_short(self):
         assert LinkInfo(temp_link).date == "2012"
