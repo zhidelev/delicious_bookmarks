@@ -5,6 +5,7 @@ import pathlib
 from collections import defaultdict
 from datetime import datetime
 from urllib.parse import urlparse
+from typing import List
 
 from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
@@ -15,10 +16,26 @@ env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
 
 class Url:
-    def __init__(self, addr):
+    """Wrapper for URL"""
+
+    def __init__(self, addr: str):
+        """Initialize URL object
+        
+        :param addr: full address
+        :type addr: str
+
+        """
+
         self._uri = addr
 
     def get_domain(self) -> str:
+        """Returns a domain for the URL
+        
+        :returns: a string with domain
+        :rtype: str
+
+        """
+
         return urlparse(self._uri).netloc
 
     def __str__(self):
@@ -26,29 +43,64 @@ class Url:
 
 
 class LinkInfo:
+    """Represents information for a link extracted from export file"""
+
     def __init__(self, info):
         self.info = info
         self._uri = Url(self.info["href"])
 
     @property
     def is_private(self) -> bool:
+
+        """Checks if link in LinkInfo is marked as private.
+
+        :returns: True if private or False overwise
+        :rtype: bool
+
+        """
+
         if self.info["private"] == "1":
-            return True
-        else:
-            return False
+            return True    
+        return False
 
     @property
     def href(self) -> str:
+        
+        """Returns 'href' attribute
+
+        :returns: link from href
+        :rtype: str
+
+        """
+
         return self.info["href"]
 
     @property
     def text(self) -> str:
+        
+        """Returns text description for a link
+
+        Returns text in 'text' attribute if set. If 'text' is empty of None returns a domain.
+
+        :returns: Text description or domain
+        :rtype: str
+
+        """ 
+
         if self.info["text"] in ["", "None"]:
             return self._uri.get_domain()
         return self.info["text"]
 
     @property
     def date(self) -> str:
+        
+        """Returns link adding date in human-readable view
+
+        :returns: string with date
+        :rtype: str
+
+        """
+
         if len(self.info["add_date"]) == 4:
             return self.info["add_date"]
         t_date = datetime.fromtimestamp(int(self.info["add_date"]))
@@ -56,6 +108,14 @@ class LinkInfo:
 
     @property
     def timestamp(self) -> int:
+        
+        """Returns timestamp of adding date
+
+        :returns: date timestamp or 0 if date is invalid
+        :rtype: int
+
+        """
+
         if len(self.info["add_date"]) == 4:
             return 0
         else:
@@ -67,10 +127,24 @@ class LinkInfo:
         else:
             return "LinkInfo is private."
 
-    def get_tags(self) -> list:
+    def get_tags(self) -> List[str]:
+        """Gets a list of tags from 'tags' attribute
+
+        :returns: list with tags or empty list
+        :rtype: list
+
+        """
+
         return self.info["tags"].split(",")
 
     def get_domain(self):
+        """Gets a  domain for a 'href' attribute
+
+        :returns: domain address
+        :rtype: str
+        
+        """
+
         return self._uri.get_domain()
 
 
