@@ -166,7 +166,7 @@ class Stats:
 
 
 def get_links(filename, private=False):
-    with open(filename) as f:
+    with open(filename, encoding='utf-8') as f:
         soup = BeautifulSoup(f.read(), "html.parser")
         for link in soup.find_all("a"):
             temp = LinkInfo({**link.attrs, **{"text": link.text}})
