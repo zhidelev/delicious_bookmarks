@@ -63,7 +63,7 @@ jobs:
         path: report.html
   
   sonar-qube:
-    
+    needs: build
     runs-on: ubuntu-latest
     
     steps:
