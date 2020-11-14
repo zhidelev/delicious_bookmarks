@@ -47,7 +47,7 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        pytest -q -vv --color="yes" --cov=. --html=report.html --self-contained-html
+        pytest -q -vv --color="yes" --cov=. --html=report_${{ matrix.platform }}.html --self-contained-html
     - name: Coverage
       run: |
         coverage xml -o coverage-all.xml
@@ -60,7 +60,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: test-report
-        path: report.html
+        path: report_${{ matrix.platform }}.html
   
   sonar-qube:
     needs: build
