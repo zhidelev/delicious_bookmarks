@@ -11,15 +11,6 @@ on:
     branches: [ master ]
 
 jobs:
-  # sonarcloud:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@master
-  #   - name: SonarCloud Scan
-  #     uses: sonarsource/sonarcloud-github-action@master
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
      
   build:
     strategy:
@@ -43,11 +34,11 @@ jobs:
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --output-file=flake8_output.txt
     - name: Test with pytest
       run: |
         pip install pytest
-        pytest -q -vv --color="yes" --cov=. --html=report_${{ matrix.platform }}.html --self-contained-html --report-log=report_${{ matrix.platform }}.json
+        pytest -m console -q -vv --color="yes" --cov=. --html=report_${{ matrix.platform }}.html --self-contained-html --report-log=report_${{ matrix.platform }}.json
     - name: Coverage
       run: |
         coverage xml -o coverage-all.xml
@@ -66,6 +57,11 @@ jobs:
       with:
         name: test-report
         path: report_${{ matrix.platform }}.json
+    - name: Upload Flake8 report
+      uses: actions/upload-artifact@v1
+      with:
+        name: test-report
+        path: flake8_output.txt
   
   sonar-qube:
     needs: build

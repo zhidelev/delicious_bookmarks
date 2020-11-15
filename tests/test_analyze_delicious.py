@@ -22,6 +22,7 @@ temp_link_empty_tags["tags"] = ""
 delicious_links = join("datasets", "delicious_links_private.html")
 
 
+@pytest.mark.console
 class TestLink:
     def test_url_creation(self):
         assert Url(temp_url)._uri == temp_url
@@ -33,6 +34,7 @@ class TestLink:
         assert Url(temp_url).__str__() == temp_url
 
 
+@pytest.mark.console
 class TestLinkInfo:
     def test_link_info_get_tags(self):
         assert LinkInfo(temp_link).get_tags() == ["education", "imported"]
@@ -71,6 +73,7 @@ class TestLinkInfo:
         assert LinkInfo(temp_link).get_domain() == "www.smartvideos.ru"
 
 
+@pytest.mark.console
 class TestStats:
     def test_stats_privacy(self):
         s = Stats()
@@ -96,6 +99,7 @@ class TestStats:
         assert s.tags["education"] == 1
 
 
+@pytest.mark.console
 class TestGetLInks:
     def test_private(self):
         f = get_links(delicious_links, private=True)
