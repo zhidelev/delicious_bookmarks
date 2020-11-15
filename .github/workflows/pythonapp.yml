@@ -47,7 +47,7 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        pytest -q -vv --color="yes" --cov=. --html=report_${{ matrix.platform }}.html --self-contained-html
+        pytest -q -vv --color="yes" --cov=. --html=report_${{ matrix.platform }}.html --self-contained-html --report-log=report_${{ matrix.platform }}.json
     - name: Coverage
       run: |
         coverage xml -o coverage-all.xml
@@ -61,6 +61,11 @@ jobs:
       with:
         name: test-report
         path: report_${{ matrix.platform }}.html
+    - name: Upload test report JSON
+      uses: actions/upload-artifact@v1
+      with:
+        name: test-report
+        path: report_${{ matrix.platform }}.json
   
   sonar-qube:
     needs: build
