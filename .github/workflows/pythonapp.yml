@@ -62,6 +62,15 @@ jobs:
       with:
         name: test-report
         path: flake8_output.txt
+    - name: MyPy
+      run: |
+        mypy --html-report report --show-error-codes --ignore-missing-imports analyze_delicious.py
+    - name: Upload Mypy report
+      uses: actions/upload-artifact@v1
+      with:
+        name: report/*
+        path: mypy_report/*
+
   
   sonar-qube:
     needs: build
