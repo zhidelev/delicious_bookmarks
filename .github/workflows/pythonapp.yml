@@ -68,8 +68,8 @@ jobs:
     - name: Upload Mypy report
       uses: actions/upload-artifact@v1
       with:
-        name: test_report
-        path: report/*
+        name: test-report
+        path: report
 
   
   sonar-qube:
