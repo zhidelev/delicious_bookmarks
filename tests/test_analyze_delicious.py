@@ -136,6 +136,7 @@ class TestCsvExport:
             assert "Timestamp" in titles
 
             data = next(reader)
+            logger.info(f"Data: {data}")
             assert data[0] == "1496225431", f"Data line: {data}"
             assert (
                 data[1]
