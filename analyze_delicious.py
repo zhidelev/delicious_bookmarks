@@ -207,10 +207,8 @@ if __name__ == "__main__":
         with open(results.output_file, "wt") as f:
             f.write(template.render(links=(link for link in get_links(input_file, results.process_private))))
 
-        print("Here")
         if results.csv_file:
-            print("here")
-            export_to_csv(csv_file, get_links(input_file, results.process_private))
+            export_to_csv(results.csv_file, get_links(input_file, results.process_private))
 
     except TypeError:
         logger.exception("No file is provided", exc_info=True)
