@@ -8,6 +8,7 @@ from collections import defaultdict
 from datetime import datetime
 from urllib.parse import urlparse
 from typing import List
+import csv
 
 from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
@@ -62,12 +63,12 @@ class LinkInfo:
         """
 
         if self.info["private"] == "1":
-            return True    
+            return True
         return False
 
     @property
     def href(self) -> str:
-        
+
         """Returns 'href' attribute
 
         :returns: link from href
@@ -79,7 +80,7 @@ class LinkInfo:
 
     @property
     def text(self) -> str:
-        
+
         """Returns text description for a link
 
         Returns text in 'text' attribute if set. If 'text' is empty of None returns a domain.
@@ -87,7 +88,7 @@ class LinkInfo:
         :returns: Text description or domain
         :rtype: str
 
-        """ 
+        """
 
         if self.info["text"] in ["", "None"]:
             return self._uri.get_domain()
@@ -95,7 +96,7 @@ class LinkInfo:
 
     @property
     def date(self) -> str:
-        
+
         """Returns link adding date in human-readable view
 
         :returns: string with date
@@ -110,7 +111,7 @@ class LinkInfo:
 
     @property
     def timestamp(self) -> int:
-        
+
         """Returns timestamp of adding date
 
         :returns: date timestamp or 0 if date is invalid
@@ -166,7 +167,7 @@ class Stats:
 
 
 def get_links(filename, private=False):
-    with open(filename, encoding='utf-8') as f:
+    with open(filename, encoding="utf-8") as f:
         soup = BeautifulSoup(f.read(), "html.parser")
         for link in soup.find_all("a"):
             temp = LinkInfo({**link.attrs, **{"text": link.text}})
@@ -177,12 +178,24 @@ def get_links(filename, private=False):
                     yield temp
 
 
+def export_to_csv(filename, links):
+    with open(filename, encoding="utf-8", mode="w") as f:
+        writer = csv.writer(f)
+        writer.writerow(("Timestamp", "Href"))
+
+        for link in links:
+            writer.writerow((link.timestamp, link.href))
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze your Delicious bookmarks.")
     parser.add_argument("-f", action="store", dest="filename", help="Path to file with bookmarks.")
     parser.add_argument("-o", action="store", dest="output_file", help="Path to output file", default="report.html")
     parser.add_argument(
         "--private", action="store_true", dest="process_private", default=False, help="Process private links"
+    )
+    parser.add_argument(
+        "-csv", action="store", dest="csv_file", help="Path to CSV file for export", default=None
     )
     results = parser.parse_args()
     logger.info("Starting with %s" % results)
@@ -193,6 +206,11 @@ if __name__ == "__main__":
 
         with open(results.output_file, "wt") as f:
             f.write(template.render(links=(link for link in get_links(input_file, results.process_private))))
+
+        print("Here")
+        if results.csv_file:
+            print("here")
+            export_to_csv(csv_file, get_links(input_file, results.process_private))
 
     except TypeError:
         logger.exception("No file is provided", exc_info=True)

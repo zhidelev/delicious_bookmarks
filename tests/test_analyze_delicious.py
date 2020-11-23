@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import copy
-from os.path import join
+from os.path import join, exists
+import csv
 
 import pytest
 
-from analyze_delicious import LinkInfo, Stats, Url, get_links
+from analyze_delicious import LinkInfo, Stats, Url, get_links, export_to_csv
 
 temp_url = "https://plumbr.eu/handbook/garbage-collection-algorithms-implementations/concurrent-mark-and-sweep"
 temp_link = {"href": "https://www.smartvideos.ru/", "add_date": "2012", "private": "1", "tags": "education,imported"}
@@ -48,8 +49,8 @@ class TestLinkInfo:
 
     def test_text(self):
         assert LinkInfo({**temp_link, **{"text": "text2"}}).text == "text2"
-        assert LinkInfo({**temp_link, **{"text": ""}, }).text == "www.smartvideos.ru"
-        assert LinkInfo({**temp_link, **{"text": "None"}, }).text == "www.smartvideos.ru"
+        assert LinkInfo({**temp_link, **{"text": ""},}).text == "www.smartvideos.ru"
+        assert LinkInfo({**temp_link, **{"text": "None"},}).text == "www.smartvideos.ru"
 
     def test_link_date_short(self):
         assert LinkInfo(temp_link).date == "2012"
@@ -114,3 +115,24 @@ class TestGetLInks:
         assert not next(f).is_private is True
         with pytest.raises(StopIteration):
             next(f)
+
+
+@pytest.mark.console
+class TestCsvExport:
+    def test_export_to_csv(self, tmp_path):
+        export_to_csv(tmp_path / "export.csv", get_links(delicious_links))
+        assert exists(tmp_path / "export.csv") is True
+
+        with open(tmp_path / "export.csv") as f:
+            reader = csv.reader(f)
+
+            titles = next(reader)
+            assert "Href" in titles
+            assert "Timestamp" in titles
+
+            data = next(reader)
+            assert data[0] == "1496225431"
+            assert (
+                data[1]
+                == "https://plumbr.eu/handbook/garbage-collection-algorithms-implementations/concurrent-mark-and-sweep"
+            )
