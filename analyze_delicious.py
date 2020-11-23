@@ -182,9 +182,8 @@ def export_to_csv(filename, links):
     with open(filename, encoding="utf-8", mode="w") as f:
         writer = csv.writer(f)
         writer.writerow(("Timestamp", "Href"))
-
-        for link in links:
-            writer.writerow((link.timestamp, link.href))
+        
+        writer.writerows(((link.timestamp, link.href) for link in links))
 
 
 if __name__ == "__main__":
