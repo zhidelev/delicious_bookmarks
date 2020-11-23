@@ -131,7 +131,7 @@ class TestCsvExport:
             assert "Timestamp" in titles
 
             data = next(reader)
-            assert data[0] == "1496225431"
+            assert data[0] == "1496225431", f"Data line: {data}"
             assert (
                 data[1]
                 == "https://plumbr.eu/handbook/garbage-collection-algorithms-implementations/concurrent-mark-and-sweep"
