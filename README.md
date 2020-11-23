@@ -23,3 +23,7 @@ The result will be saved to report.html file. It's possible to specify another p
 By default, script does not parse private links. To parse them you should use --private key.
 
     python analyze_delicious.py -f file_name --private
+
+It's possible to export data to CSV file
+
+    python analyze_delicious.py -f file_name -csv out.csv

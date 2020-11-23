@@ -9,6 +9,7 @@ from datetime import datetime
 from urllib.parse import urlparse
 from typing import List
 from dataclasses import dataclass
+import csv
 
 from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
@@ -168,6 +169,15 @@ def get_links(filename, private=False):
                     yield temp
 
 
+def export_to_csv(filename, links):
+    with open(filename, encoding="utf-8", mode="w") as f:
+        writer = csv.writer(f, dialect="unix")
+        writer.writerow(("Timestamp", "Href"))
+
+        writer.writerows(((link.timestamp, link.href) for link in links))
+        f.flush()
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze your Delicious bookmarks.")
     parser.add_argument("-f", action="store", dest="filename", help="Path to file with bookmarks.")
@@ -175,6 +185,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--private", action="store_true", dest="process_private", default=False, help="Process private links"
     )
+    parser.add_argument("-csv", action="store", dest="csv_file", help="Path to CSV file for export", default=None)
     results = parser.parse_args()
     logger.info("Starting with %s" % results)
     template = env.get_template("template.html")
@@ -184,6 +195,9 @@ if __name__ == "__main__":
 
         with open(results.output_file, "wt") as f:
             f.write(template.render(links=(link for link in get_links(input_file, results.process_private))))
+
+        if results.csv_file:
+            export_to_csv(results.csv_file, get_links(input_file, results.process_private))
 
     except TypeError:
         logger.exception("No file is provided", exc_info=True)
