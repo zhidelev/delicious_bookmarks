@@ -120,10 +120,10 @@ class TestGetLInks:
 @pytest.mark.console
 class TestCsvExport:
     def test_export_to_csv(self, tmp_path):
-        export_to_csv(tmp_path / "export.csv", get_links(delicious_links))
-        assert exists(tmp_path / "export.csv") is True
+        export_to_csv(join(tmp_path, "export.csv"), get_links(delicious_links))
+        assert exists(join(tmp_path, "export.csv")) is True
 
-        with open(tmp_path / "export.csv") as f:
+        with open(join(tmp_path, "export.csv")) as f:
             reader = csv.reader(f)
 
             titles = next(reader)
