@@ -3,10 +3,13 @@
 import copy
 from os.path import join, exists
 import csv
+import logging
 
 import pytest
 
 from analyze_delicious import LinkInfo, Stats, Url, get_links, export_to_csv
+
+logger = logging.getLogger(__name__)
 
 temp_url = "https://plumbr.eu/handbook/garbage-collection-algorithms-implementations/concurrent-mark-and-sweep"
 temp_link = {"href": "https://www.smartvideos.ru/", "add_date": "2012", "private": "1", "tags": "education,imported"}
@@ -119,7 +122,8 @@ class TestGetLInks:
 
 @pytest.mark.console
 class TestCsvExport:
-    def test_export_to_csv(self, tmp_path):
+    def test_export_to_csv(self, tmp_path, caplog):
+        caplog.set_level(logging.INFO)
         export_to_csv(join(tmp_path, "export.csv"), get_links(delicious_links))
         assert exists(join(tmp_path, "export.csv")) is True
 
@@ -127,6 +131,7 @@ class TestCsvExport:
             reader = csv.reader(f)
 
             titles = next(reader)
+            logger.info(f"Titles: {titles}")
             assert "Href" in titles
             assert "Timestamp" in titles
 
