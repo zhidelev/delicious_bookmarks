@@ -61,9 +61,7 @@ class LinkInfo:
 
         """
 
-        if self.info["private"] == "1":
-            return True    
-        return False
+        return self.info["private"] == "1"
 
     @property
     def href(self) -> str:
