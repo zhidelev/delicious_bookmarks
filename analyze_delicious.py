@@ -8,6 +8,7 @@ from collections import defaultdict
 from datetime import datetime
 from urllib.parse import urlparse
 from typing import List
+from dataclasses import dataclass
 
 from bs4 import BeautifulSoup
 from jinja2 import Environment, FileSystemLoader
@@ -17,18 +18,11 @@ logger = logging.getLogger("root")
 env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
 
+@dataclass
 class Url:
     """Wrapper for URL"""
 
-    def __init__(self, addr: str):
-        """Initialize URL object
-        
-        :param addr: full address
-        :type addr: str
-
-        """
-
-        self._uri = addr
+    addr: str
 
     def get_domain(self) -> str:
         """Returns a domain for the URL
@@ -38,10 +32,10 @@ class Url:
 
         """
 
-        return urlparse(self._uri).netloc
+        return urlparse(self.addr).netloc
 
     def __str__(self):
-        return self._uri
+        return self.addr
 
 
 class LinkInfo:
@@ -61,11 +55,11 @@ class LinkInfo:
 
         """
 
-        return self.info["private"] == "1"
+        return True if self.info["private"] == "1" else False
 
     @property
     def href(self) -> str:
-        
+
         """Returns 'href' attribute
 
         :returns: link from href
@@ -77,7 +71,7 @@ class LinkInfo:
 
     @property
     def text(self) -> str:
-        
+
         """Returns text description for a link
 
         Returns text in 'text' attribute if set. If 'text' is empty of None returns a domain.
@@ -85,7 +79,7 @@ class LinkInfo:
         :returns: Text description or domain
         :rtype: str
 
-        """ 
+        """
 
         if self.info["text"] in ["", "None"]:
             return self._uri.get_domain()
@@ -93,7 +87,7 @@ class LinkInfo:
 
     @property
     def date(self) -> str:
-        
+
         """Returns link adding date in human-readable view
 
         :returns: string with date
@@ -108,7 +102,7 @@ class LinkInfo:
 
     @property
     def timestamp(self) -> int:
-        
+
         """Returns timestamp of adding date
 
         :returns: date timestamp or 0 if date is invalid
@@ -164,7 +158,7 @@ class Stats:
 
 
 def get_links(filename, private=False):
-    with open(filename, encoding='utf-8') as f:
+    with open(filename, encoding="utf-8") as f:
         soup = BeautifulSoup(f.read(), "html.parser")
         for link in soup.find_all("a"):
             temp = LinkInfo({**link.attrs, **{"text": link.text}})
