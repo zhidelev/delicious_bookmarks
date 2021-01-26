@@ -25,7 +25,7 @@ delicious_links = join("datasets", "delicious_links_private.html")
 @pytest.mark.console
 class TestLink:
     def test_url_creation(self):
-        assert Url(temp_url)._uri == temp_url
+        assert Url(temp_url).addr == temp_url
 
     def test_get_domain_for_url(self):
         assert Url(temp_url).get_domain() == "plumbr.eu"
