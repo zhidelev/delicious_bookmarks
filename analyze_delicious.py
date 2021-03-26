@@ -38,12 +38,11 @@ class Url:
         return self.addr
 
 
+@dataclass
 class LinkInfo:
     """Represents information for a link extracted from export file"""
 
-    def __init__(self, info):
-        self.info = info
-        self._uri = Url(self.info["href"])
+    info: dict
 
     @property
     def is_private(self) -> bool:
@@ -82,7 +81,7 @@ class LinkInfo:
         """
 
         if self.info["text"] in ["", "None"]:
-            return self._uri.get_domain()
+            return Url(self.info["href"]).get_domain()
         return self.info["text"]
 
     @property
@@ -117,7 +116,7 @@ class LinkInfo:
 
     def __str__(self) -> str:
         if not self.is_private:
-            return f"LinkInfo: {self._uri.get_domain()}"
+            return f"LinkInfo: {Url(self.info['href']).get_domain()}"
         else:
             return "LinkInfo is private."
 
@@ -139,7 +138,7 @@ class LinkInfo:
         
         """
 
-        return self._uri.get_domain()
+        return Url(self.info["href"]).get_domain()
 
 
 class Stats:
