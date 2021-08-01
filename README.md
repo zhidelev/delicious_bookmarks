@@ -27,3 +27,9 @@ By default, script does not parse private links. To parse them you should use --
 It's possible to export data to CSV file
 
     python analyze_delicious.py -f file_name -csv out.csv
+
+
+
+# To run Web Service
+
+    uvicorn main:app --reload
