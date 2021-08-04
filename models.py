@@ -1,18 +1,18 @@
-from typing import List, Optional
+from typing import List, Optional, Set
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, HttpUrl
 
 
 class LinkBase(BaseModel):
-    href: str
+    href: HttpUrl = Field(..., example="https://www.example.com/")
     private: Optional[bool] = True
     tags: Optional[List[str]] = []
 
 
 class LinkUpdate(LinkBase):
-    href: Optional[str]
+    href: Optional[HttpUrl] = Field(..., example="https://www.example.com/")
     private: Optional[bool]
-    tags: Optional[List[str]]
+    tags: Optional[Set[str]] = set()
 
 
 class Link(LinkBase):
