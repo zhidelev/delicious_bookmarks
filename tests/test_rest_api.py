@@ -85,6 +85,7 @@ def test_update_link(payload):
     link_id = resp["id"]
 
     r = client.put(f"{URL}/links/{link_id}", json=payload)
+    print(r.text)
     assert r.status_code == 200
 
     resp = r.json()
