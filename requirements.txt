@@ -13,7 +13,7 @@ coverage==5.1
 distlib==0.3.1
 docutils==0.16
 execnet==1.9.0
-fastapi==0.63.0
+fastapi==0.65.2
 filelock==3.0.12
 flake8==3.8.4
 Flask==1.1.2
