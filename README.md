@@ -4,13 +4,13 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=zhidelev_delicious_bookmarks&metric=alert_status)](https://sonarcloud.io/dashboard?id=zhidelev_delicious_bookmarks)
 
-# About
+## About
 
 **analyze_delicious.py** is a small script to get a nicer HTML document for default Delicious bookmarks export.
 
 To use this script you need Python 3.8 to be installed in your system.
 
-# Basic usage:
+## Basic usage
 
     python analyze_delicious.py -f file_name
 
