@@ -28,7 +28,7 @@ iniconfig==1.1.1
 isort==5.6.4
 itsdangerous==1.1.0
 Jinja2==2.11.1
-lxml==4.6.1
+lxml==4.6.5
 MarkupSafe==1.1.1
 mccabe==0.6.1
 more-itertools==8.2.0
