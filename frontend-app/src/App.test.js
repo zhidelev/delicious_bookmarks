@@ -3,7 +3,7 @@ import App from './App';
 
 test('app has header part', () => {
   render(<App />);
-  const header = screen.getByText(/Header/i);
+  const header = screen.getByText(/Bookmarks/i);
   expect(header).toBeInTheDocument();
 });
 

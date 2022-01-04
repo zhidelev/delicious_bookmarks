@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import Link from './Link';
+import Bookmark from './Bookmark.js';
 
 test('renders learn react link', () => {
-  render(<Link />);
-  const linkElement = screen.getByText(/Link/i);
+  render(<Bookmark />);
+  const linkElement = screen.getByText(/Title/i);
   expect(linkElement).toBeInTheDocument();
 });

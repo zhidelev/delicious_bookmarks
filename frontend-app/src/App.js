@@ -1,5 +1,5 @@
 import './App.css';
-import Link from './components/Link';
+import Bookmark from './components/Bookmark';
 import AppHeader from './components/AppHeader';
 import React, { Component } from 'react';
 import AppFooter from './components/AppFooter';
@@ -8,10 +8,9 @@ export default class App extends Component {
 
   render() {
     return (
-      <div>
+      <div className="m-8 grid justify-items-center">
         <AppHeader />
-        Hello, world
-        <Link />
+        <Bookmark />
         <AppFooter />
       </div>
     );

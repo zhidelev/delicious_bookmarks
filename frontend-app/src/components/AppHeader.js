@@ -3,7 +3,9 @@ import React, { Component } from "react";
 export default class AppHeader extends Component {
     render() {
         return (
-            <h2>Header</h2>
+            <div>
+                <h2 className="font-sans text-2xl text-center">Bookmarks</h2>
+            </div>
         )
     }
 }
