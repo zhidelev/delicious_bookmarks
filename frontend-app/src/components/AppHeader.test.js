@@ -3,6 +3,6 @@ import AppHeader from './AppHeader';
 
 test('renders App Header', () => {
   render(<AppHeader />);
-  const header = screen.getByText(/Header/i);
+  const header = screen.getByText(/Bookmarks/i);
   expect(header).toBeInTheDocument();
 });
