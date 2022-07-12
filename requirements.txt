@@ -79,6 +79,7 @@ tornado==6.0.4
 tox==3.20.1
 typed-ast==1.4.1
 typing-extensions==3.7.4.3
+urllib3==1.25.11
 uvicorn==0.13.4
 virtualenv==20.0.35
 wcwidth==0.1.9
