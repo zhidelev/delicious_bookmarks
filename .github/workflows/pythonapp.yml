@@ -4,9 +4,6 @@
 name: Python application
 
 on:
-  push:
-    branches:
-      - '**'
   pull_request:
     branches: [master]
 
@@ -37,7 +34,7 @@ jobs:
       - name: Test with pytest
         run: |
           pip install pytest
-          pytest -m console -q -vv --color="yes" --cov=. --html=report_${{ matrix.platform }}.html --self-contained-html --report-log=report_${{ matrix.platform }}.json
+          pytest
       - name: Bandit scan
         run: |
           bandit -r . --exclude ./tests,./venv
@@ -53,12 +50,12 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: test-report
-          path: report_${{ matrix.platform }}.html
+          path: report.html
       - name: Upload test report JSON
         uses: actions/upload-artifact@v1
         with:
           name: test-report
-          path: report_${{ matrix.platform }}.json
+          path: report.json
       - name: Upload Flake8 report
         uses: actions/upload-artifact@v1
         with:
