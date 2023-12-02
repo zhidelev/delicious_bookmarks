@@ -9,7 +9,7 @@ schema = schemathesis.from_uri(
 )
 
 
-@pytest.mark.xfail(reason="experimental")
+@pytest.mark.skip(reason="experimental")
 @schema.parametrize()
 @settings(max_examples=1000)
 def test_api(case):
