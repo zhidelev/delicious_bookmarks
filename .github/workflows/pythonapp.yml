@@ -37,7 +37,7 @@ jobs:
           pytest backend/
       - name: Bandit scan
         run: |
-          bandit -r . --exclude ./tests,./venv
+          bandit -r . -c bandit.yaml --exclude ./venv
       - name: Coverage
         run: |
           coverage xml -o coverage-all.xml
