@@ -63,7 +63,7 @@ jobs:
           path: flake8_output.txt
       - name: MyPy
         run: |
-          mypy --html-report report --show-error-codes --ignore-missing-imports analyze_delicious.py
+          mypy --html-report report --show-error-codes --ignore-missing-imports backend/
       - name: Upload Mypy report
         uses: actions/upload-artifact@v1
         with:
