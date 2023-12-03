@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Path
 from pydantic import BaseModel, HttpUrl
 from typing import List, Union
-from tag import Tags
+from .tag import Tags
 import json
 
 
@@ -26,7 +26,7 @@ bookmarks = []
 
 @app.get("/")
 def get_root():
-    return {"Hello, world!"}
+    return {"Hello": "world!"}
 
 
 @app.get("/bookmarks/{b_id}", tags=[Tags.bookmarks])
