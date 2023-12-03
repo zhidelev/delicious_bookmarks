@@ -21,7 +21,7 @@ class BookmarkOut(BookmarkIn):
 
 app = FastAPI()
 
-bookmarks = []
+bookmarks: List[BookmarkOut] = []
 
 
 @app.get("/")
@@ -42,5 +42,5 @@ def get_all_bookmarks() -> Union[List[BookmarkOut], List[None]]:
 
 
 @app.post("/bookmarks/", tags=[Tags.bookmarks])
-def create_bookmark(bookmark: BookmarkIn) -> BookmarkId:
+def create_bookmark(bookmark: BookmarkIn):
     return {"id": 1}
