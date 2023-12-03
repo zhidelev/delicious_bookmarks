@@ -1,4 +1,0 @@
-{"pytest_version": "7.4.3", "$report_type": "SessionStart"}
-{"nodeid": "", "outcome": "passed", "longrepr": null, "result": null, "sections": [], "$report_type": "CollectReport"}
-{"nodeid": "backend/src/app/__init__.py", "outcome": "passed", "longrepr": null, "result": null, "sections": [], "$report_type": "CollectReport"}
-{"exitstatus": 5, "$report_type": "SessionFinish"}
