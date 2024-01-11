@@ -1,7 +1,8 @@
-import schemathesis
+# import schemathesis
 import pytest
 from hypothesis import settings
-from schemathesis import DataGenerationMethod
+
+# from schemathesis import DataGenerationMethod
 
 # schema = schemathesis.from_uri(
 #     "http://127.0.0.1:8000/openapi.json",
