@@ -43,7 +43,7 @@ jobs:
           poetry run pytest
       - name: Bandit scan
         run: |
-          poetry run bandit -r . -c bandit.yaml
+          poetry run bandit -r . -c ../bandit.yaml
       - name: Coverage
         run: |
           poetry run coverage xml -o coverage-all.xml
