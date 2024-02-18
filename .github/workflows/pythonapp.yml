@@ -56,17 +56,17 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: test-report
-          path: report.html
+          path: ./backend/report.html
       - name: Upload test report JSON
         uses: actions/upload-artifact@v1
         with:
           name: test-report
-          path: report.json
+          path: ./backend/report.json
       - name: Upload Flake8 report
         uses: actions/upload-artifact@v1
         with:
           name: test-report
-          path: flake8_output.txt
+          path: ./backend/flake8_output.txt
       - name: MyPy
         run: |
           poetry run mypy --html-report report --show-error-codes --ignore-missing-imports .
@@ -74,7 +74,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: test-report
-          path: report
+          path: ./backend/report
 
   sonar-qube:
     needs: build
