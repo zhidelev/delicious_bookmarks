@@ -40,7 +40,7 @@ jobs:
           poetry run flake8 . --count --exit-zero --statistics --output-file=flake8_output.txt
       - name: Test with pytest
         run: |
-          poetry run pytest backend/
+          poetry run pytest
       - name: Bandit scan
         run: |
           poetry run bandit -r . -c bandit.yaml
@@ -69,7 +69,7 @@ jobs:
           path: flake8_output.txt
       - name: MyPy
         run: |
-          poetry run mypy --html-report report --show-error-codes --ignore-missing-imports backend/
+          poetry run mypy --html-report report --show-error-codes --ignore-missing-imports .
       - name: Upload Mypy report
         uses: actions/upload-artifact@v1
         with:
