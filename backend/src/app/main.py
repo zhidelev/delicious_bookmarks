@@ -1,28 +1,27 @@
 from typing import Annotated, List, Union
+from sqlalchemy.orm import Session
 
-from fastapi import FastAPI, Path
-from pydantic import BaseModel, HttpUrl
+from fastapi import FastAPI, Path, Depends
+
+from . import crud, models, schemas
+from .database import SessionLocal, engine
+
+models.Base.metadata.create_all(bind=engine)
+
 
 from .tag import Tags
 
 
-class BookmarkId(BaseModel):
-    id: int
-
-
-class BookmarkIn(BaseModel):
-    uri: HttpUrl
-    description: Union[str, None] = None
-    tags: Union[List[str], None] = None
-
-
-class BookmarkOut(BookmarkIn):
-    id: int
-
-
 app = FastAPI()
 
-bookmarks: List[BookmarkIn] = []
+
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 @app.get("/")
@@ -35,12 +34,11 @@ def get_bookmark(b_id: Annotated[int, Path(title="The ID of the bookmark to get.
     return {"id": b_id, "bookmark": dict()}
 
 
-@app.get("/bookmarks", tags=[Tags.bookmarks], response_model=List[BookmarkOut])
-def get_all_bookmarks() -> Union[List[BookmarkOut], List[None]]:
-    return [BookmarkOut(id=i + 1, uri=bookmarks[i].uri) for i in range(len(bookmarks))]
+@app.get("/bookmarks", response_model=List[schemas.BookmarkOut])
+def get_all_bookmarks(db: Session = Depends(get_db)) -> Union[List[schemas.BookmarkOut], List[dict]]:
+    return crud.all_bookmarks(db)
 
 
-@app.post("/bookmarks/", tags=[Tags.bookmarks], response_model=BookmarkId)
-def create_bookmark(bookmark: BookmarkIn) -> BookmarkId:
-    bookmarks.append(bookmark)
-    return BookmarkId(id=len(bookmarks))
+@app.post("/bookmarks/", response_model=schemas.BookmarkOut)
+def create_bookmark(bookmark: schemas.BookmarkIn, db: Session = Depends(get_db)):
+    return crud.create_bookmark(db, bookmark)
