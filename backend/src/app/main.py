@@ -5,11 +5,10 @@ from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
+from .tag import Tags
 
 models.Base.metadata.create_all(bind=engine)
 
-
-from .tag import Tags
 
 app = FastAPI()
 
