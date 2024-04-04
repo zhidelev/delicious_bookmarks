@@ -28,6 +28,7 @@ lxml = "^5.1.0"
 [tool.poetry.group.dev.dependencies]
 hypothesis = "^6.98.8"
 python-dotenv = "^1.0.1"
+isort = "^5.13.2"
 
 [build-system]
 requires = ["poetry-core"]
