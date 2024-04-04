@@ -10,7 +10,7 @@ python = "^3.12"
 uvicorn = "^0.25.0"
 fastapi = "^0.109.0"
 sqlalchemy = "^2.0.29"
-psycopg2 = "^2.9.9"
+psycopg2-binary = "^2.9.9"
 
 
 [tool.poetry.group.test.dependencies]
@@ -27,6 +27,7 @@ lxml = "^5.1.0"
 
 [tool.poetry.group.dev.dependencies]
 hypothesis = "^6.98.8"
+python-dotenv = "^1.0.1"
 
 [build-system]
 requires = ["poetry-core"]

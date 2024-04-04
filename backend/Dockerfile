@@ -5,10 +5,10 @@ WORKDIR /code
 COPY ./pyproject.toml /code/pyproject.toml
 COPY ./poetry.lock /code/poetry.lock
 
-RUN pip install poetry && poetry install --no-root --no-directory
+RUN pip install poetry && poetry install --no-root --no-directory 
 
 COPY ./src/app /code/app
 
-RUN poetry install --no-dev
+RUN poetry install --without dev
 
 CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
