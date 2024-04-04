@@ -2,12 +2,16 @@ from typing import Annotated, List, Union
 
 from fastapi import Depends, FastAPI, Path
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import InterfaceError
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 from .tag import Tags
 
-models.Base.metadata.create_all(bind=engine)
+try:
+    models.Base.metadata.create_all(bind=engine)
+except InterfaceError:
+    pass
 
 
 app = FastAPI()
