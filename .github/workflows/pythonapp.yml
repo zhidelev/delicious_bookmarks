@@ -8,15 +8,12 @@ on:
     branches: [master]
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        platform: [ubuntu-latest]
-    runs-on: ${{ matrix.platform }}
+  lint_flake8:
+    runs-on: ubuntu-latest
+    name: Lint with flake8
     defaults:
       run:
         working-directory: ./backend
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -32,18 +29,89 @@ jobs:
       - name: Install project
         run: |
           poetry install --with test --no-interaction --no-root
-      - name: Lint with flake8
-        run: |
+      - run: |
           # stop the build if there are Python syntax errors or undefined names
           poetry run flake8 . --count --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           poetry run flake8 . --count --exit-zero --statistics --output-file=flake8_output.txt
+      - name: Upload Flake8 report
+        uses: actions/upload-artifact@v1
+        with:
+          name: test-report
+          path: ./backend/flake8_output.txt
+  lint_bandit:
+    runs-on: ubuntu-latest
+    name: Bandit scan
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Install project
+        run: |
+          poetry install --with test --no-interaction --no-root
+      - run: poetry run bandit -r . -c ../bandit.yaml
+  lint_mypy:
+    runs-on: ubuntu-latest
+    name: MyPy
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Install project
+        run: |
+          poetry install --with test --no-interaction --no-root
+      - run: poetry run mypy --html-report report --show-error-codes --ignore-missing-imports .
+      - name: Upload Mypy report
+        uses: actions/upload-artifact@v1
+        with:
+          name: test-report
+          path: ./backend/report
+  test:
+    runs-on: ubuntu-latest
+    needs: [lint_bandit, lint_mypy, lint_flake8]
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Install project
+        run: |
+          poetry install --with test --no-interaction --no-root
       - name: Test with pytest
         run: |
           poetry run pytest
-      - name: Bandit scan
-        run: |
-          poetry run bandit -r . -c ../bandit.yaml
       - name: Coverage
         run: |
           poetry run coverage xml -o coverage-all.xml
@@ -62,22 +130,9 @@ jobs:
         with:
           name: test-report
           path: ./backend/report.json
-      - name: Upload Flake8 report
-        uses: actions/upload-artifact@v1
-        with:
-          name: test-report
-          path: ./backend/flake8_output.txt
-      - name: MyPy
-        run: |
-          poetry run mypy --html-report report --show-error-codes --ignore-missing-imports .
-      - name: Upload Mypy report
-        uses: actions/upload-artifact@v1
-        with:
-          name: test-report
-          path: ./backend/report
 
   sonar-qube:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
