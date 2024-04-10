@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator, AnyUrl
+from urllib.parse import urlsplit
 
 
 class BookmarkId(BaseModel):
@@ -6,9 +7,12 @@ class BookmarkId(BaseModel):
 
 
 class BookmarkIn(BaseModel):
-    uri: str
-    title: str
-    description: str = ""
+    uri: AnyUrl = Field(
+        title="The URI of the bookmark to get.",
+        strict=True,
+    )
+    title: str = Field(default="", title="The title of the bookmark.", min_length=0)
+    description: str = Field(default="", title="The description of the bookmark.", min_length=0)
 
     class Config:
         from_attributes = True

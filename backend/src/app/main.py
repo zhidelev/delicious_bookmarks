@@ -1,6 +1,7 @@
 from typing import Annotated, List, Union
+from urllib.parse import urlsplit
 
-from fastapi import Depends, FastAPI, Path
+from fastapi import Depends, FastAPI, Path, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import InterfaceError
 
@@ -43,4 +44,7 @@ def get_all_bookmarks(db: Session = Depends(get_db)) -> Union[List[schemas.Bookm
 
 @app.post("/bookmarks/", response_model=schemas.BookmarkOut)
 def create_bookmark(bookmark: schemas.BookmarkIn, db: Session = Depends(get_db)):
+    parsed_url = urlsplit(str(bookmark.uri))
+    if parsed_url.netloc == "":
+        raise HTTPException(status_code=400, detail="Invalid URL")
     return crud.create_bookmark(db, bookmark)
