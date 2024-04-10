@@ -1,5 +1,4 @@
-from pydantic import BaseModel, Field, field_validator, AnyUrl
-from urllib.parse import urlsplit
+from pydantic import BaseModel, Field, AnyUrl
 
 
 class BookmarkId(BaseModel):
