@@ -6,11 +6,12 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.9"
 uvicorn = "^0.25.0"
 fastapi = "^0.109.0"
 sqlalchemy = "^2.0.29"
 pg8000 = "^1.31.1"
+pytest-docker-compose-v2 = "^0.1.1"
 
 
 [tool.poetry.group.test.dependencies]
@@ -23,6 +24,7 @@ pytest-html = "^4.1.1"
 pytest-reportlog = "^0.4.0"
 httpx = "^0.26.0"
 lxml = "^5.1.0"
+schemathesis = "^3.26.1"
 
 
 [tool.poetry.group.dev.dependencies]
