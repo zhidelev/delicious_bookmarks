@@ -43,12 +43,17 @@ def get_bookmark(
     return result
 
 
-@app.get("/bookmarks", response_model=List[schemas.BookmarkOut])
+@app.get("/bookmarks", tags=[Tags.bookmarks], response_model=List[schemas.BookmarkOut])
 def get_all_bookmarks(db: Session = Depends(get_db)) -> Union[List[schemas.BookmarkOut], List[dict]]:
     return crud.all_bookmarks(db)
 
 
-@app.post("/bookmarks/", response_model=schemas.BookmarkOut, responses={400: {"description": "Invalid URL"}})
+@app.post(
+    "/bookmarks/",
+    tags=[Tags.bookmarks],
+    response_model=schemas.BookmarkOut,
+    responses={400: {"description": "Invalid URL"}},
+)
 def create_bookmark(bookmark: schemas.BookmarkIn, db: Session = Depends(get_db)):
     parsed_url = urlsplit(str(bookmark.uri))
     if parsed_url.netloc == "":
