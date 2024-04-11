@@ -7,6 +7,6 @@ class Bookmark(Base):
     __tablename__ = "bookmarks"
 
     id = Column(Integer, primary_key=True, index=True)
-    uri = Column(String, index=True)
-    title = Column(String, index=True)
+    uri = Column(String)
+    title = Column(String)
     description = Column(String)
