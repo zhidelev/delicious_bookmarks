@@ -36,6 +36,7 @@ def all_bookmarks(db: Session):
     Returns:
         List[Bookmark]: A list of all bookmarks in the database.
     """
+    # TODO: Add offset and limit to the query
     return db.query(models.Bookmark).all()
 
 
