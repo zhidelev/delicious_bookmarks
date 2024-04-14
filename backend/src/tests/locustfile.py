@@ -13,6 +13,6 @@ class BasicBookmarksUser(HttpUser):
             json={
                 "uri": "https://example.com",
                 "title": "Example Domain",
-                "description": "An example domain for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.",
+                "description": "An example domain for use in illustrative examples in documents. You may use!",
             },
         )
