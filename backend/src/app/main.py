@@ -43,7 +43,7 @@ def get_bookmark(
     return result
 
 
-@app.get("/bookmarks", tags=[Tags.bookmarks], response_model=List[schemas.BookmarkOut])
+@app.get("/bookmarks/", tags=[Tags.bookmarks], response_model=List[schemas.BookmarkOut])
 def get_all_bookmarks(db: Session = Depends(get_db)) -> Union[List[schemas.BookmarkOut], List[dict]]:
     return crud.all_bookmarks(db)
 
