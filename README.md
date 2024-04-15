@@ -9,7 +9,7 @@ In the beginning `delicious bookmarks` was a python script for exporting data fr
 
 ### Running web-service
 
-    docker compose run -d
+    docker compose run --build -d
 
 ### Stipping web-service
 
