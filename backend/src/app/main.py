@@ -1,7 +1,7 @@
 from typing import Annotated, List, Union
 from urllib.parse import urlsplit
 
-from fastapi import Depends, FastAPI, Path
+from fastapi import Depends, FastAPI, Path, Query
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import InterfaceError
 from sqlalchemy.orm import Session
@@ -43,13 +43,17 @@ def get_bookmark(
     return result
 
 
-@app.get("/bookmarks/", tags=[Tags.bookmarks], response_model=List[schemas.BookmarkOut])
-def get_all_bookmarks(db: Session = Depends(get_db)) -> Union[List[schemas.BookmarkOut], List[dict]]:
-    return crud.all_bookmarks(db)
+@app.get("/bookmarks", tags=[Tags.bookmarks], response_model=List[schemas.BookmarkOut])
+def get_all_bookmarks(
+    db: Session = Depends(get_db),
+    page: Annotated[int, Query(ge=0)] = 0,
+    limit: Annotated[int, Query(ge=10, le=50)] = 10,
+) -> Union[List[schemas.BookmarkOut], List[dict]]:
+    return crud.all_bookmarks(db, page, limit)
 
 
 @app.post(
-    "/bookmarks/",
+    "/bookmarks",
     tags=[Tags.bookmarks],
     response_model=schemas.BookmarkOut,
     responses={400: {"description": "Invalid URL"}},

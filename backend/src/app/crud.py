@@ -26,18 +26,20 @@ def create_bookmark(db: Session, bookmark: schemas.BookmarkIn):
     return db_bookmark
 
 
-def all_bookmarks(db: Session):
+def all_bookmarks(db: Session, offset: int = 0, limit: int = 10):
     """
     Retrieve all bookmarks from the database.
 
     Args:
         db (Session): The database session.
+        offset (int): The offset for the query.
+        limit (int): The limit for the query.
 
     Returns:
         List[Bookmark]: A list of all bookmarks in the database.
     """
     # TODO: Add offset and limit to the query
-    return db.query(models.Bookmark).all()
+    return db.query(models.Bookmark).limit(limit).offset(offset * limit).all()
 
 
 def get_bookmark(db: Session, b_id: int):

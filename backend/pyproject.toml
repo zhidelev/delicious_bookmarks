@@ -6,7 +6,7 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.12"
 uvicorn = "^0.25.0"
 fastapi = "^0.109.0"
 sqlalchemy = "^2.0.29"
@@ -32,6 +32,7 @@ locust = "^2.25.0"
 hypothesis = "^6.98.8"
 python-dotenv = "^1.0.1"
 isort = "^5.13.2"
+ruff = "^0.3.7"
 
 [build-system]
 requires = ["poetry-core"]
