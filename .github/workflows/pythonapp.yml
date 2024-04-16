@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: chartboost/ruff-action@v1
         with:
-          src: './backend/src'
+          src: './backend'
           args: 'check'
   lint_flake8:
     runs-on: ubuntu-latest
@@ -99,6 +99,26 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: [lint_bandit, lint_mypy, lint_flake8]
+
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
     defaults:
       run:
         working-directory: ./backend
@@ -119,7 +139,14 @@ jobs:
           poetry install --with test --no-interaction --no-root
       - name: Test with pytest
         run: |
+          printenv
           poetry run pytest
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: postgres
       - name: Coverage
         run: |
           poetry run coverage xml -o coverage-all.xml

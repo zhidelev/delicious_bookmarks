@@ -1,4 +1,5 @@
-from sqlalchemy.exc import MultipleResultsFound, NoResultFound, ProgrammingError
+from sqlalchemy.exc import (MultipleResultsFound, NoResultFound,
+                            ProgrammingError)
 from sqlalchemy.orm import Session
 
 from . import models, schemas
