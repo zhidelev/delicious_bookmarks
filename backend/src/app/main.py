@@ -15,7 +15,6 @@ try:
 except InterfaceError:
     pass
 
-
 app = FastAPI()
 
 
@@ -33,10 +32,18 @@ def get_root():
     return {"Hello": "world!"}
 
 
-@app.get("/bookmarks/{b_id}", tags=[Tags.bookmarks], responses={404: {"description": "Bookmark not found"}})
+@app.get(
+    "/bookmarks/{b_id}",
+    tags=[Tags.bookmarks],
+    responses={404: {"description": "Bookmark not found"}, 422: {"description": "Invalid bookmark ID"}},
+)
 def get_bookmark(
     b_id: Annotated[int, Path(title="The ID of the bookmark to get.", ge=1)], db: Session = Depends(get_db)
 ):
+    try:
+        int(b_id)
+    except ValueError:
+        return JSONResponse(status_code=422, content={"message": "Invalid bookmark ID"})
     result = crud.get_bookmark(db, b_id)
     if result is None:
         return JSONResponse(status_code=404, content={"message": "Bookmark not found"})
