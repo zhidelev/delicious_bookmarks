@@ -1,5 +1,4 @@
-from sqlalchemy.exc import (MultipleResultsFound, NoResultFound,
-                            ProgrammingError)
+from sqlalchemy.exc import MultipleResultsFound, NoResultFound, ProgrammingError
 from sqlalchemy.orm import Session
 
 from . import models, schemas
@@ -62,3 +61,23 @@ def get_bookmark(db: Session, b_id: int):
     except ProgrammingError:
         db.rollback()
         return None
+
+
+def delete_bookmark(db: Session, b_id: int):
+    """
+    Delete a bookmark from the database.
+
+    Args:
+        db (Session): The database session.
+        b_id (int): The ID of the bookmark to delete.
+
+    Returns:
+        bool: True if the bookmark was deleted, False otherwise.
+    """
+    try:
+        db.query(models.Bookmark).filter(models.Bookmark.id == b_id).delete()
+        db.commit()
+        return True
+    except ProgrammingError:
+        db.rollback()
+        return False

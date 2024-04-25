@@ -11,6 +11,7 @@ from hypothesis import settings
 from hypothesis import strategies as st
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import httpx
 
 from app import models
 from app.main import app, get_db
@@ -124,3 +125,17 @@ def test_create_bookmark(test_client, uri):
             assert isinstance(response.json()["id"], int)
         else:
             assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY.value
+
+
+@given(b_id=st.one_of(st.text(), pt.urls(), st.integers()))
+def test_delete_bookmark(test_client, b_id):
+    try:
+        response = test_client.delete(f"/bookmarks/{b_id}")
+        assert response.status_code in [
+            HTTPStatus.OK.value,
+            HTTPStatus.NOT_FOUND.value,
+            HTTPStatus.METHOD_NOT_ALLOWED.value,
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        ]
+    except httpx.InvalidURL:
+        pass
