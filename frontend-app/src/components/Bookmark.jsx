@@ -6,7 +6,7 @@ import BookmarkDate from './BookmarkDate.jsx';
 export default class Bookmark extends Component {
 	render() {
 		return (
-			<div className="relative auto-rows-max border-2 rounded-br-lg border-l-indigo-50 shadow-lg w-1/2">
+			<div className="bg-gray-100">
 				<BookmarkTitle />
 				<BookmarkDomain />
 				<BookmarkDate />
