@@ -1,12 +1,12 @@
-import { Component } from 'react';
-
-export default class BookmarkDomain extends Component {
-	render() {
-		return (
-			<div>
-				<span  className="text-slate-400">Domain</span>
-			</div>
+function BookmarkDomain() {
+	
+	return (
+		<div>
+			<span  className="text-3xl font-bold underline">Domain</span>
+		</div>
             
-		);
-	}
+	);
+
 }
+
+export default BookmarkDomain;
